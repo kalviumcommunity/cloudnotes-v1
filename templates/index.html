@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloudNotes</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CloudNotes</h1>
+      <p>A simple local note management app for architecture review.</p>
+    </header>
+
+    <section>
+      <p>This application serves HTML pages, a local SQLite database, static assets, and a REST API.</p>
+      <div class="cards">
+        <div class="card">
+          <h2>Local Flask App</h2>
+          <p>Runs on a single developer machine with Flask.</p>
+        </div>
+        <div class="card">
+          <h2>View Notes</h2>
+          <p>Inspect current notes and upload attachments.</p>
+        </div>
+        <div class="card">
+          <h2>API Endpoints</h2>
+          <p>REST endpoints are exposed under <code>/api/notes</code>.</p>
+        </div>
+      </div>
+      <a class="button" href="/notes">Open Notes</a>
+    </section>
+  </div>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>

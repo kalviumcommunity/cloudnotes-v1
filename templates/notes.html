@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CloudNotes</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Notes</h1>
+      <a class="secondary-button" href="/">Back to Home</a>
+    </header>
+
+    <section class="form-panel">
+      <h2>Create a Note</h2>
+      <form id="note-form" method="post" enctype="multipart/form-data">
+        <label>Title</label>
+        <input type="text" name="title" placeholder="Note title" />
+
+        <label>Body</label>
+        <textarea name="body" rows="5" placeholder="Write your note here..."></textarea>
+
+        <label>Attachment</label>
+        <input type="file" name="attachment" />
+
+        <button type="submit">Save Note</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Saved Notes</h2>
+      <div id="notes-list" class="notes-list"></div>
+    </section>
+  </div>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
