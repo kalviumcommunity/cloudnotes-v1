@@ -1,0 +1,17 @@
+[Unit]
+Description=CloudNotes Gunicorn Service
+After=network.target postgresql.service
+Requires=postgresql.service
+
+[Service]
+User=vinni
+Group=vinni
+WorkingDirectory=/home/vinni/projects/cloudnotes-v1
+Environment="PATH=/home/vinni/projects/cloudnotes-v1/venv/bin"
+ExecStart=/home/vinni/projects/cloudnotes-v1/venv/bin/gunicorn --bind 0.0.0.0:5000 app:app
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
