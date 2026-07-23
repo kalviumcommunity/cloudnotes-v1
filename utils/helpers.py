@@ -1,30 +1,36 @@
-import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS notes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     body TEXT NOT NULL,
     filename TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """
 
 ALLOWED_EXTENSIONS = {"txt", "md", "pdf", "png", "jpg", "jpeg", "gif"}
 
 
-def get_db_connection(db_path):
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    return conn
+def get_db_connection():
+    return psycopg2.connect(
+        os.getenv("DATABASE_URL"),
+        cursor_factory=RealDictCursor
+    )
 
 
-def init_db(db_path):
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)
-    conn = get_db_connection(db_path)
-    with conn:
-        conn.executescript(SCHEMA)
+def init_db():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(SCHEMA)
+    conn.commit()
+    cur.close()
     conn.close()
 
 
