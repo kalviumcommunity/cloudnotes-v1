@@ -1,0 +1,21 @@
+[Unit]
+Description=CloudNotes Flask Application
+After=network.target
+
+[Service]
+User=megha
+Group=megha
+
+WorkingDirectory=/home/megha/cloudnotes-v1
+
+Environment="PATH=/home/megha/cloudnotes-v1/venv/bin"
+
+ExecStart=/home/megha/cloudnotes-v1/venv/bin/gunicorn \
+    --bind 0.0.0.0:5000 \
+    app:app
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
