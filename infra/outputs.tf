@@ -3,7 +3,7 @@ output "vm_name" {
 }
 
 output "database_name" {
-  value = module.database.db_name
+  value = module.database.database_name
 }
 
 output "bucket_name" {

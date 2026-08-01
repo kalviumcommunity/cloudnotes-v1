@@ -1,3 +1,3 @@
-output "db_name" {
-  value = local.db_name
+output "database_name" {
+  value = "cloudnotes-db"
 }

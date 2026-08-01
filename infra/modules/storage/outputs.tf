@@ -1,3 +1,3 @@
 output "bucket_name" {
-  value = local.bucket
+  value = var.bucket_name
 }

@@ -1,3 +1,4 @@
-locals {
-  vm_name = "cloudnotes-vm"
+resource "random_pet" "vm" {
+  prefix = "cloudnotes-vm"
+  length = 2
 }
