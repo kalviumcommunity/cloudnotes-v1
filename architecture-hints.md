@@ -4,7 +4,7 @@ This repository contains a local Flask web application.
 - HTML templates are stored in the `templates/` folder.
 - Static content is grouped under `static/`.
 - Uploaded files are written to the `uploads/` directory.
-- A SQLite database file is stored in `database/cloudnotes.db`.
+- PostgreSQL stores application data in the `cloudnotes` database, using the `notes` table.
 - REST API routes are implemented under `api/routes.py`.
 - Helper functions for database access are in `utils/helpers.py`.
 
