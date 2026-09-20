@@ -1,0 +1,22 @@
+project_name = "cloudnotes"
+project_id   = "cloudnotes-local"
+region       = "local"
+
+network_name = "cloudnotes-network"
+
+web_cidr = "10.10.1.0/24"
+app_cidr = "10.10.2.0/24"
+db_cidr  = "10.10.3.0/24"
+
+app_name     = "cloudnotes-app"
+machine_type = "small"
+
+app_service_account = "cloudnotes-app-sa"
+app_role             = "storage.objectViewer"
+
+db_name   = "cloudnotes-db"
+db_engine = "postgres"
+db_size   = "small"
+
+bucket_name   = "cloudnotes-assets"
+storage_class = "standard"
