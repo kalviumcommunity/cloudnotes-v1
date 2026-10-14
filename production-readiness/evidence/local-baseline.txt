@@ -1,0 +1,54 @@
+CloudNotes production readiness evidence
+2026-10-14T06:21:42+00:00
+Branch: assessment/production-readiness
+HEAD: 3837a0cbecc5ce740cc36309aafe6d49547d9e94
+
+=== Git working tree ===
+ M app.py
+ M k8s/deployment.yaml
+?? .dockerignore
+?? Dockerfile
+?? Dockerfile.naive
+?? Makefile
+?? app.py.before-logging
+?? docker-compose.yml
+?? k8s-backup/
+?? k8s/configmap.yaml
+?? k8s/deployment-good.yaml
+?? k8s/ingress.yaml
+?? k8s/network-policy.yaml
+?? k8s/pvc.yaml
+?? production-readiness/evidence/
+?? prometheus.yml
+?? promtail.yml
+?? utils/helper.py
+
+=== Automated tests ===
+..                                                                       [100%]
+=============================== warnings summary ===============================
+venv/lib/python3.12/site-packages/flask/scaffold.py:50
+  /home/joshua/cloudnotes-v1/venv/lib/python3.12/site-packages/flask/scaffold.py:50: DeprecationWarning: 'before_first_request' is deprecated and will be removed in Flask 2.3. Run setup code while creating the application instead.
+    return f(self, *args, **kwargs)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 passed, 1 warning in 0.25s
+
+=== Kubernetes deployment state ===
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                            SELECTOR
+deployment.apps/cloudnotes   3/3     3            3           27d   cloudnotes   localhost:5000/cloudnotes:1.0.1   app=cloudnotes
+deployment.apps/postgres     1/1     1            1           27d   postgres     postgres:16                       app=postgres
+
+NAME                              READY   STATUS    RESTARTS       AGE   IP               NODE       NOMINATED NODE   READINESS GATES
+pod/cloudnotes-749d976ffd-f4j5t   1/1     Running   1 (139m ago)   23d   10.244.120.97    minikube   <none>           <none>
+pod/cloudnotes-749d976ffd-vf6c9   1/1     Running   1 (139m ago)   23d   10.244.120.98    minikube   <none>           <none>
+pod/cloudnotes-749d976ffd-z7l82   1/1     Running   1 (139m ago)   23d   10.244.120.95    minikube   <none>           <none>
+pod/postgres-586bc58666-579v8     1/1     Running   2 (139m ago)   27d   10.244.120.100   minikube   <none>           <none>
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE   SELECTOR
+service/cloudnotes   ClusterIP   10.106.55.162   <none>        80/TCP     27d   app=cloudnotes
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP    27d   <none>
+service/postgres     ClusterIP   10.100.125.8    <none>        5432/TCP   27d   app=postgres
+
+=== Ingress state ===
+NAMESPACE   NAME         CLASS   HOSTS              ADDRESS        PORTS   AGE
+default     cloudnotes   nginx   cloudnotes.local   192.168.49.2   80      27d

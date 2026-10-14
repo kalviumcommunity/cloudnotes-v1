@@ -1,0 +1,323 @@
+=== Deployment configuration ===
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "4"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"cloudnotes"},"name":"cloudnotes","namespace":"default"},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"cloudnotes"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app":"cloudnotes"}},"spec":{"containers":[{"env":[{"name":"DATABASE_URL","valueFrom":{"secretKeyRef":{"key":"DATABASE_URL","name":"cloudnotes-database-url"}}}],"image":"localhost:5000/cloudnotes:1.0.1","imagePullPolicy":"IfNotPresent","livenessProbe":{"httpGet":{"path":"/health","port":5000},"initialDelaySeconds":10,"periodSeconds":10},"name":"cloudnotes","ports":[{"containerPort":5000}],"readinessProbe":{"httpGet":{"path":"/ready","port":5000},"initialDelaySeconds":5,"periodSeconds":5},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}}]}}}}
+  creationTimestamp: "2026-09-17T04:34:00Z"
+  generation: 4
+  labels:
+    app: cloudnotes
+  name: cloudnotes
+  namespace: default
+  resourceVersion: "24027"
+  uid: fb0c4d49-9fbd-4e23-b4b2-39edf3384b2f
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: cloudnotes
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-09-17T05:03:01Z"
+      labels:
+        app: cloudnotes
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              key: DATABASE_URL
+              name: cloudnotes-database-url
+        image: localhost:5000/cloudnotes:1.0.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 5000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: cloudnotes
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ready
+            port: 5000
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 3
+  conditions:
+  - lastTransitionTime: "2026-09-17T05:03:01Z"
+    lastUpdateTime: "2026-09-20T14:25:23Z"
+    message: ReplicaSet "cloudnotes-749d976ffd" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-10-14T04:03:24Z"
+    lastUpdateTime: "2026-10-14T04:03:24Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 4
+  readyReplicas: 3
+  replicas: 3
+  terminatingReplicas: 0
+  updatedReplicas: 3
+
+=== PostgreSQL deployment configuration ===
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"postgres","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"postgres"}},"template":{"metadata":{"labels":{"app":"postgres"}},"spec":{"containers":[{"env":[{"name":"POSTGRES_DB","valueFrom":{"secretKeyRef":{"key":"POSTGRES_DB","name":"cloudnotes-db-secret"}}},{"name":"POSTGRES_USER","valueFrom":{"secretKeyRef":{"key":"POSTGRES_USER","name":"cloudnotes-db-secret"}}},{"name":"POSTGRES_PASSWORD","valueFrom":{"secretKeyRef":{"key":"POSTGRES_PASSWORD","name":"cloudnotes-db-secret"}}}],"image":"postgres:16","name":"postgres","ports":[{"containerPort":5432}]}]}}}}
+  creationTimestamp: "2026-09-17T04:33:39Z"
+  generation: 1
+  name: postgres
+  namespace: default
+  resourceVersion: "23976"
+  uid: 5ce3b1cf-6e37-470a-9469-202d00a64013
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: postgres
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_DB
+              name: cloudnotes-db-secret
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: cloudnotes-db-secret
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: cloudnotes-db-secret
+        image: postgres:16
+        imagePullPolicy: IfNotPresent
+        name: postgres
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-09-17T05:01:48Z"
+    lastUpdateTime: "2026-09-17T05:01:48Z"
+    message: ReplicaSet "postgres-586bc58666" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-10-14T04:03:09Z"
+    lastUpdateTime: "2026-10-14T04:03:09Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  terminatingReplicas: 0
+  updatedReplicas: 1
+
+=== Network policies ===
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"postgres-network-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cloudnotes"}}}],"ports":[{"port":5432,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"postgres"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-09-17T04:58:01Z"
+    generation: 1
+    name: postgres-network-policy
+    namespace: default
+    resourceVersion: "2410"
+    uid: 50727386-ad50-47fe-a825-44e170921ae0
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: cloudnotes
+      ports:
+      - port: 5432
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: postgres
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+=== Recent CloudNotes logs ===
+Found 3 pods, using pod/cloudnotes-749d976ffd-z7l82
+192.168.49.2 - - [14/Oct/2026 06:20:43] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:20:43] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:20:48] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:20:53] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:20:53] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:20:59] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:04] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:04] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:09] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:14] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:14] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:19] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:24] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:24] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:30] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:35] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:35] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:40] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:45] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:45] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:50] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:55] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:21:55] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:00] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:05] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:05] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:10] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:15] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:15] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:20] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:25] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:25] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:30] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:36] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:36] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:41] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:46] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:46] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:51] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:56] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:22:56] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:01] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:06] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:06] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:12] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:17] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:17] "GET /health HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:22] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:27] "GET /ready HTTP/1.1" 200 -
+192.168.49.2 - - [14/Oct/2026 06:23:27] "GET /health HTTP/1.1" 200 -
+
+=== Recent PostgreSQL logs ===
+
+fixing permissions on existing directory /var/lib/postgresql/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Etc/UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+
+Success. You can now start the database server using:
+
+    pg_ctl -D /var/lib/postgresql/data -l logfile start
+
+initdb: warning: enabling "trust" authentication for local connections
+initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+waiting for server to start....2026-10-14 04:03:11.396 UTC [48] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-10-14 04:03:11.400 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-14 04:03:11.410 UTC [51] LOG:  database system was shut down at 2026-10-14 04:03:10 UTC
+2026-10-14 04:03:11.419 UTC [48] LOG:  database system is ready to accept connections
+ done
+server started
+CREATE DATABASE
+
+
+/usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+
+2026-10-14 04:03:11.694 UTC [48] LOG:  received fast shutdown request
+waiting for server to shut down....2026-10-14 04:03:11.697 UTC [48] LOG:  aborting any active transactions
+2026-10-14 04:03:11.700 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+2026-10-14 04:03:11.702 UTC [49] LOG:  shutting down
+2026-10-14 04:03:11.705 UTC [49] LOG:  checkpoint starting: shutdown immediate
+2026-10-14 04:03:11.817 UTC [49] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.035 s, sync=0.067 s, total=0.116 s; sync files=301, longest=0.009 s, average=0.001 s; distance=4273 kB, estimate=4273 kB; lsn=0/191F0F0, redo lsn=0/191F0F0
+2026-10-14 04:03:11.826 UTC [48] LOG:  database system is shut down
+ done
+server stopped
+
+PostgreSQL init process complete; ready for start up.
+
+2026-10-14 04:03:11.927 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-10-14 04:03:11.928 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-10-14 04:03:11.928 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2026-10-14 04:03:11.934 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-14 04:03:11.945 UTC [64] LOG:  database system was shut down at 2026-10-14 04:03:11 UTC
+2026-10-14 04:03:11.957 UTC [1] LOG:  database system is ready to accept connections
+2026-10-14 04:08:12.693 UTC [62] LOG:  checkpoint starting: time
+2026-10-14 04:08:21.952 UTC [62] LOG:  checkpoint complete: wrote 94 buffers (0.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=9.225 s, sync=0.017 s, total=9.259 s; sync files=52, longest=0.006 s, average=0.001 s; distance=428 kB, estimate=428 kB; lsn=0/198A148, redo lsn=0/198A110
