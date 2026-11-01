@@ -14,10 +14,8 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
 app.register_blueprint(api_bp, url_prefix="/api")
 
-@app.before_first_request
-def startup():
-    init_db(DATABASE_PATH)
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+init_db(DATABASE_PATH)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/")
 def home():
