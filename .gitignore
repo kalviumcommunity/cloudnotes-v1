@@ -1,7 +1,16 @@
+# Python
 venv/
+.venv/
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+
+# Environment secrets
+.env
+
+# Local database and backups
+backups/
+database/*.db
+
+# OS and editor files
 .DS_Store
 *.swp
