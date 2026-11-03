@@ -1,0 +1,12 @@
+project_name               = "cloudnotes"
+region                     = "asia-south1"
+vpc_cidr                   = "10.0.0.0/16"
+web_subnet_cidr            = "10.0.1.0/24"
+app_subnet_cidr            = "10.0.2.0/24"
+db_subnet_cidr             = "10.0.3.0/24"
+app_instance_type          = "small"
+app_private_ip             = "10.0.2.10"
+db_name                    = "cloudnotes_db"
+bucket_name                = "cloudnotes-assets-local"
+app_service_account_name   = "cloudnotes-app"
+app_roles                  = ["storage.objectViewer"]
